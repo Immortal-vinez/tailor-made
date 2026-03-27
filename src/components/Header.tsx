@@ -4,7 +4,13 @@ import { useState } from "react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Menu, X, Shirt, LayoutDashboard, LogOut, User } from "lucide-react";
 
 export function Header() {
@@ -111,6 +117,9 @@ export function Header() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+              <SheetHeader className="sr-only">
+                <SheetTitle>Mobile navigation</SheetTitle>
+              </SheetHeader>
               <div className="flex flex-col gap-6 pt-8">
                 <div className="flex items-center justify-between">
                   <span className="text-lg font-bold">ONEWAY</span>
