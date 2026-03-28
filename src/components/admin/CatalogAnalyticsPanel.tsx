@@ -17,6 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AlertTriangle, CheckCircle2, Star, TrendingUp } from "lucide-react";
 import type { Product } from "@/lib/google";
+import { formatUsd } from "@/lib/currency";
 
 interface CatalogAnalyticsPanelProps {
   products: Product[];
@@ -31,8 +32,6 @@ const CATEGORY_COLORS: Record<string, string> = {
 const PRICE_RANGE_COLOR = "#6366f1";
 
 export function CatalogAnalyticsPanel({ products }: CatalogAnalyticsPanelProps) {
-  const formatPrice = (value: number) => `K${value.toFixed(2)}`;
-
   if (products.length === 0) {
     return (
       <Card>
@@ -70,10 +69,10 @@ export function CatalogAnalyticsPanel({ products }: CatalogAnalyticsPanelProps) 
 
   // ── Price range distribution ─────────────────────────────────────────
   const priceRanges = [
-    { label: "Under K25", count: products.filter((p) => p.price < 25).length },
-    { label: "K25-K50", count: products.filter((p) => p.price >= 25 && p.price < 50).length },
-    { label: "K50-K100", count: products.filter((p) => p.price >= 50 && p.price < 100).length },
-    { label: "Over K100", count: products.filter((p) => p.price >= 100).length },
+    { label: "Under $25", count: products.filter((p) => p.price < 25).length },
+    { label: "$25-$50", count: products.filter((p) => p.price >= 25 && p.price < 50).length },
+    { label: "$50-$100", count: products.filter((p) => p.price >= 50 && p.price < 100).length },
+    { label: "Over $100", count: products.filter((p) => p.price >= 100).length },
   ];
 
   // ── Catalog health ────────────────────────────────────────────────────
@@ -107,7 +106,7 @@ export function CatalogAnalyticsPanel({ products }: CatalogAnalyticsPanelProps) 
               <TrendingUp className="inline h-3 w-3 mr-1" />
               Avg Price
             </p>
-            <p className="text-3xl font-bold mt-1">{formatPrice(avgPrice)}</p>
+            <p className="text-3xl font-bold mt-1">{formatUsd(avgPrice)}</p>
           </CardContent>
         </Card>
         <Card>
@@ -164,8 +163,8 @@ export function CatalogAnalyticsPanel({ products }: CatalogAnalyticsPanelProps) 
               <BarChart data={avgPriceByCategory} margin={{ top: 4, right: 16, left: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-                <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => `K${v}`} />
-                <Tooltip formatter={(value: number) => [formatPrice(value), "Avg price"]} />
+                <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => formatUsd(Number(v))} />
+                <Tooltip formatter={(value: number) => [formatUsd(Number(value)), "Avg price"]} />
                 <Bar dataKey="avgPrice" radius={[4, 4, 0, 0]}>
                   {avgPriceByCategory.map((entry) => (
                     <Cell

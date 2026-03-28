@@ -36,6 +36,7 @@ import {
 } from "lucide-react";
 import type { Product } from "@/lib/google";
 import { useToast } from "@/hooks/use-toast";
+import { formatUsd } from "@/lib/currency";
 
 interface AdminPanelProps {
   open: boolean;
@@ -285,7 +286,7 @@ export function AdminPanel({ open, onOpenChange, products, onRefresh }: AdminPan
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="price">Price (K)</Label>
+                  <Label htmlFor="price">Price (USD)</Label>
                   <Input
                     id="price"
                     type="number"
@@ -455,7 +456,7 @@ export function AdminPanel({ open, onOpenChange, products, onRefresh }: AdminPan
                           <Badge variant="outline" className="text-xs">
                             {product.category}
                           </Badge>
-                          <span className="text-sm font-semibold whitespace-nowrap">K{product.price.toFixed(2)}</span>
+                          <span className="text-sm font-semibold whitespace-nowrap">{formatUsd(product.price)}</span>
                           {product.featured && (
                             <Badge className="text-xs bg-amber-500">Featured</Badge>
                           )}

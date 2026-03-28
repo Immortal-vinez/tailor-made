@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MessageCircle, Star } from "lucide-react";
 import type { Product } from "@/lib/google";
+import { formatUsd } from "@/lib/currency";
 
 interface HeroSectionProps {
   product: Product | null;
@@ -11,11 +12,9 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({ product, whatsappNumber }: HeroSectionProps) {
-  const formatPrice = (price: number) => `K${price.toFixed(2)}`;
-
   const whatsappMessage = product
     ? encodeURIComponent(
-        `Hi! I'm interested in the ${product.name} (${product.category}) - ${formatPrice(product.price)}. Can you provide more details?`
+        `Hi! I'm interested in the ${product.name} (${product.category}) - ${formatUsd(product.price)}. Can you provide more details?`
       )
     : encodeURIComponent("Hi! I'm interested in your products.");
 
@@ -87,7 +86,7 @@ export function HeroSection({ product, whatsappNumber }: HeroSectionProps) {
             {product && (
               <div className="mt-6 p-4 rounded-xl bg-white/60 backdrop-blur border max-w-md mx-auto lg:mx-0">
                 <p className="text-sm text-muted-foreground">Featured: {product.name}</p>
-                <p className="text-2xl font-bold text-foreground">{formatPrice(product.price)}</p>
+                <p className="text-2xl font-bold text-foreground">{formatUsd(product.price)}</p>
               </div>
             )}
           </div>
@@ -109,7 +108,7 @@ export function HeroSection({ product, whatsappNumber }: HeroSectionProps) {
                       <p className="font-semibold text-foreground truncate">{product.name}</p>
                       <p className="text-sm text-muted-foreground line-clamp-1">{product.description}</p>
                     </div>
-                    <p className="text-lg sm:text-xl font-bold whitespace-nowrap shrink-0">{formatPrice(product.price)}</p>
+                    <p className="text-lg sm:text-xl font-bold whitespace-nowrap shrink-0">{formatUsd(product.price)}</p>
                   </div>
                 </div>
               )}

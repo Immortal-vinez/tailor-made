@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, Heart, Eye } from "lucide-react";
 import type { Product } from "@/lib/google";
+import { formatUsd } from "@/lib/currency";
 
 interface ProductCardProps {
   product: Product;
@@ -43,12 +44,11 @@ const categoryColors = {
 export function ProductCard({ product, whatsappNumber, variant = "men" }: ProductCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
-  const formatPrice = (price: number) => `K${price.toFixed(2)}`;
   
   const colors = categoryColors[variant];
   
   const whatsappMessage = encodeURIComponent(
-    `Hi! I'm interested in ${product.name} - ${formatPrice(product.price)}. Sizes available: ${product.sizes.join(", ") || "N/A"}. Colors: ${product.colors.join(", ") || "N/A"}. Can you provide more details?`
+    `Hi! I'm interested in ${product.name} - ${formatUsd(product.price)}. Sizes available: ${product.sizes.join(", ") || "N/A"}. Colors: ${product.colors.join(", ") || "N/A"}. Can you provide more details?`
   );
   
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
@@ -126,7 +126,7 @@ export function ProductCard({ product, whatsappNumber, variant = "men" }: Produc
             </p>
           </div>
           <p className={`text-sm sm:text-lg font-bold whitespace-nowrap shrink-0 ${colors.text}`}>
-            {formatPrice(product.price)}
+            {formatUsd(product.price)}
           </p>
         </div>
 

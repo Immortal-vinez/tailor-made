@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
@@ -12,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
   Loader2,
@@ -20,11 +21,51 @@ import {
   Shirt,
   LogOut,
   ShoppingBag,
+  Package,
+  Clock3,
+  CheckCircle2,
 } from "lucide-react";
+import { formatUsd } from "@/lib/currency";
+
+interface AccountOrder {
+  id: string;
+  customerName: string;
+  customerPhone: string;
+  customerEmail: string | null;
+  items: Array<{ name?: string; qty?: number; productName?: string }>;
+  totalAmount: number;
+  status: string;
+  note: string | null;
+  createdAt: string;
+}
+
+const STATUS_STYLES: Record<string, string> = {
+  pending: "bg-amber-100 text-amber-800 border-amber-200",
+  confirmed: "bg-blue-100 text-blue-800 border-blue-200",
+  shipped: "bg-violet-100 text-violet-800 border-violet-200",
+  delivered: "bg-green-100 text-green-800 border-green-200",
+  cancelled: "bg-red-100 text-red-800 border-red-200",
+};
+
+function summarizeItems(items: AccountOrder["items"]): string {
+  if (!Array.isArray(items) || items.length === 0) return "No items recorded";
+
+  return items
+    .slice(0, 3)
+    .map((item) => {
+      const name = item?.name || item?.productName || "Item";
+      const qty = typeof item?.qty === "number" && item.qty > 0 ? item.qty : 1;
+      return `${qty}x ${name}`;
+    })
+    .join(", ");
+}
 
 export default function AccountPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
+  const [orders, setOrders] = useState<AccountOrder[]>([]);
+  const [loadingOrders, setLoadingOrders] = useState(true);
+  const [ordersError, setOrdersError] = useState<string | null>(null);
 
   const isAdmin =
     session?.user?.isAdmin === true || session?.user?.role === "admin";
@@ -39,6 +80,45 @@ export default function AccountPage() {
       router.replace("/admin");
     }
   }, [status, isAdmin, router]);
+
+  useEffect(() => {
+    if (status !== "authenticated" || isAdmin) return;
+
+    let active = true;
+    setLoadingOrders(true);
+    setOrdersError(null);
+
+    fetch("/api/account/orders")
+      .then((res) => res.json())
+      .then((data) => {
+        if (!active) return;
+        if (!data.success) {
+          setOrdersError(data.error || "Could not load your orders.");
+          setOrders([]);
+          return;
+        }
+        setOrders(Array.isArray(data.orders) ? data.orders : []);
+      })
+      .catch(() => {
+        if (!active) return;
+        setOrdersError("Could not load your orders.");
+        setOrders([]);
+      })
+      .finally(() => {
+        if (active) setLoadingOrders(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [status, isAdmin]);
+
+  const orderStats = useMemo(() => {
+    const total = orders.length;
+    const inProgress = orders.filter((o) => ["pending", "confirmed", "shipped"].includes(o.status)).length;
+    const delivered = orders.filter((o) => o.status === "delivered").length;
+    return { total, inProgress, delivered };
+  }, [orders]);
 
   if (status === "loading" || (status === "authenticated" && isAdmin)) {
     return (
@@ -111,6 +191,76 @@ export default function AccountPage() {
             </div>
           </CardContent>
         </Card>
+
+        <section className="mt-6 space-y-4">
+          <div className="grid grid-cols-3 gap-3">
+            <Card className="shadow-sm">
+              <CardContent className="pt-4">
+                <p className="text-xs text-muted-foreground flex items-center gap-1">
+                  <Package className="h-3.5 w-3.5" /> Total
+                </p>
+                <p className="text-xl font-semibold mt-1">{orderStats.total}</p>
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-sm">
+              <CardContent className="pt-4">
+                <p className="text-xs text-muted-foreground flex items-center gap-1">
+                  <Clock3 className="h-3.5 w-3.5" /> Active
+                </p>
+                <p className="text-xl font-semibold mt-1">{orderStats.inProgress}</p>
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-sm">
+              <CardContent className="pt-4">
+                <p className="text-xs text-muted-foreground flex items-center gap-1">
+                  <CheckCircle2 className="h-3.5 w-3.5" /> Delivered
+                </p>
+                <p className="text-xl font-semibold mt-1">{orderStats.delivered}</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card className="shadow-sm">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base">Recent Orders</CardTitle>
+              <CardDescription>Your latest order updates.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {loadingOrders ? (
+                <div className="py-6 flex items-center justify-center">
+                  <Loader2 className="h-5 w-5 animate-spin text-neutral-500" />
+                </div>
+              ) : ordersError ? (
+                <p className="text-sm text-red-600">{ordersError}</p>
+              ) : orders.length === 0 ? (
+                <div className="text-sm text-muted-foreground space-y-3">
+                  <p>No orders yet for this account.</p>
+                  <Button asChild size="sm">
+                    <Link href="/">Start Shopping</Link>
+                  </Button>
+                </div>
+              ) : (
+                orders.map((order) => (
+                  <div key={order.id} className="rounded-lg border p-3 space-y-2">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-sm font-medium">Order #{order.id.slice(-8).toUpperCase()}</p>
+                      <Badge variant="outline" className={STATUS_STYLES[order.status] ?? ""}>
+                        {order.status}
+                      </Badge>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      {new Date(order.createdAt).toLocaleString()}
+                    </p>
+                    <p className="text-sm text-muted-foreground">{summarizeItems(order.items)}</p>
+                    <p className="text-sm font-semibold">{formatUsd(order.totalAmount || 0)}</p>
+                  </div>
+                ))
+              )}
+            </CardContent>
+          </Card>
+        </section>
 
         {/* Sign out link */}
         <p className="mt-8 text-sm text-center text-muted-foreground">

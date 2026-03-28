@@ -41,6 +41,7 @@ import {
   Plus,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { formatUsd } from "@/lib/currency";
 
 interface OrderRecord {
   id: string;
@@ -292,7 +293,7 @@ export default function AdminOrdersPage() {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="o-total">Total Amount (K)</Label>
+                  <Label htmlFor="o-total">Total Amount (USD)</Label>
                   <Input
                     id="o-total"
                     type="number"
@@ -341,7 +342,7 @@ export default function AdminOrdersPage() {
           <Card>
             <CardContent className="pt-5">
               <p className="text-2xl font-bold">
-                K{total.toFixed(2)}
+                {formatUsd(total)}
               </p>
               <p className="text-xs text-muted-foreground">Total Revenue</p>
             </CardContent>
@@ -385,7 +386,7 @@ export default function AdminOrdersPage() {
                           </p>
                         </TableCell>
                         <TableCell className="text-sm font-medium">
-                          {order.totalAmount > 0 ? `K${order.totalAmount.toFixed(2)}` : "—"}
+                          {order.totalAmount > 0 ? formatUsd(order.totalAmount) : "—"}
                         </TableCell>
                         <TableCell>
                           <Select

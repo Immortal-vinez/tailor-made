@@ -19,6 +19,9 @@ export const metadata: Metadata = {
   description: "Discover quality fashion for men, women, and children at Oneway. Express yourself with our stylish clothing collection.",
   keywords: ["Oneway", "Fashion", "Men Clothing", "Women Clothing", "Children Clothing", "Style", "Trending"],
   authors: [{ name: "Oneway" }],
+  other: {
+    "darkreader-lock": "",
+  },
   icons: {
     icon: "/logo.svg",
   },
@@ -37,6 +40,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
+        suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
         <Providers>

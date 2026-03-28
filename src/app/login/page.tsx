@@ -224,6 +224,12 @@ function LoginPageInner() {
                   )}
                   Sign In
                 </Button>
+
+                <p className="text-right text-sm">
+                  <Link href="/forgot-password" className="text-muted-foreground underline underline-offset-2 hover:text-foreground">
+                    Forgot password?
+                  </Link>
+                </p>
               </form>
             </TabsContent>
 

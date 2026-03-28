@@ -7,12 +7,25 @@ const SCOPES = [
   'https://www.googleapis.com/auth/spreadsheets',
 ];
 
+function normalizePrivateKey(raw?: string): string | undefined {
+  if (!raw) return undefined;
+
+  const trimmed = raw.trim();
+  const unwrapped =
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+      ? trimmed.slice(1, -1)
+      : trimmed;
+
+  return unwrapped.replace(/\\n/g, '\n').replace(/\r\n/g, '\n');
+}
+
 // Initialize Google Auth
 async function getGoogleAuth() {
   const auth = new google.auth.GoogleAuth({
     credentials: {
       client_email: process.env.GOOGLE_CLIENT_EMAIL,
-      private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+      private_key: normalizePrivateKey(process.env.GOOGLE_PRIVATE_KEY),
     },
     scopes: SCOPES,
   });

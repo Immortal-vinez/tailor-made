@@ -14,6 +14,16 @@ function isGoogleDriveConfigured(): boolean {
   );
 }
 
+async function saveLocally(file: File, fileName: string): Promise<string> {
+  const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+  await mkdir(uploadsDir, { recursive: true });
+
+  const buffer = Buffer.from(await file.arrayBuffer());
+  await writeFile(path.join(uploadsDir, fileName), buffer);
+
+  return `/uploads/${fileName}`;
+}
+
 // POST - Upload image (Google Drive or local fallback)
 export async function POST(request: NextRequest) {
   try {
@@ -50,17 +60,14 @@ export async function POST(request: NextRequest) {
     let imageUrl: string;
 
     if (isGoogleDriveConfigured()) {
-      // Upload to Google Drive
-      imageUrl = await uploadImageToDrive(file, fileName);
+      try {
+        imageUrl = await uploadImageToDrive(file, fileName);
+      } catch (driveError) {
+        console.error('Google Drive upload failed, falling back to local storage:', driveError);
+        imageUrl = await saveLocally(file, fileName);
+      }
     } else {
-      // Fallback: save locally to public/uploads/
-      const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
-      await mkdir(uploadsDir, { recursive: true });
-
-      const buffer = Buffer.from(await file.arrayBuffer());
-      await writeFile(path.join(uploadsDir, fileName), buffer);
-
-      imageUrl = `/uploads/${fileName}`;
+      imageUrl = await saveLocally(file, fileName);
     }
     
     return NextResponse.json({
