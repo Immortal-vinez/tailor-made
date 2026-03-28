@@ -14,6 +14,10 @@ function isGoogleDriveConfigured(): boolean {
   );
 }
 
+function canUseLocalStorageFallback(): boolean {
+  return process.env.NODE_ENV !== 'production';
+}
+
 async function saveLocally(file: File, fileName: string): Promise<string> {
   const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
   await mkdir(uploadsDir, { recursive: true });
@@ -63,10 +67,34 @@ export async function POST(request: NextRequest) {
       try {
         imageUrl = await uploadImageToDrive(file, fileName);
       } catch (driveError) {
-        console.error('Google Drive upload failed, falling back to local storage:', driveError);
+        console.error('Google Drive upload failed:', driveError);
+
+        if (!canUseLocalStorageFallback()) {
+          return NextResponse.json(
+            {
+              success: false,
+              error:
+                'Google Drive upload failed in production. Verify GOOGLE_DRIVE_FOLDER_ID and share that folder with the service account email.',
+            },
+            { status: 502 }
+          );
+        }
+
+        console.error('Falling back to local storage (development only).');
         imageUrl = await saveLocally(file, fileName);
       }
     } else {
+      if (!canUseLocalStorageFallback()) {
+        return NextResponse.json(
+          {
+            success: false,
+            error:
+              'Google Drive is not configured for production uploads. Set GOOGLE_CLIENT_EMAIL, GOOGLE_PRIVATE_KEY, and GOOGLE_DRIVE_FOLDER_ID.',
+          },
+          { status: 500 }
+        );
+      }
+
       imageUrl = await saveLocally(file, fileName);
     }
     

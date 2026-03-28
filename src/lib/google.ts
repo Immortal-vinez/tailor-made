@@ -279,17 +279,29 @@ export async function uploadImageToDrive(
   const nodeBuffer = Buffer.from(buffer);
   const stream = Readable.from(nodeBuffer);
   
-  const response = await drive.files.create({
-    requestBody: {
-      name: fileName,
-      parents: [folderId],
-      mimeType: file.type,
-    },
-    media: {
-      mimeType: file.type,
-      body: stream,
-    },
-  });
+  let response;
+  try {
+    response = await drive.files.create({
+      requestBody: {
+        name: fileName,
+        parents: [folderId],
+        mimeType: file.type,
+      },
+      media: {
+        mimeType: file.type,
+        body: stream,
+      },
+    });
+  } catch (error: any) {
+    const status = error?.code || error?.status || error?.response?.status;
+    if (status === 404) {
+      throw new Error(
+        `Google Drive folder not found or not shared with service account: ${folderId}`
+      );
+    }
+
+    throw error;
+  }
   
   const fileId = response.data.id;
   
