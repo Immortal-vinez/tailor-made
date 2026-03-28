@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Loader2, Shirt, Eye, EyeOff } from "lucide-react";
@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export default function ResetPasswordPage() {
+function ResetPasswordPageInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const token = useMemo(() => searchParams.get("token") || "", [searchParams]);
@@ -139,5 +139,19 @@ export default function ResetPasswordPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <Loader2 className="h-10 w-10 animate-spin text-neutral-700" />
+        </div>
+      }
+    >
+      <ResetPasswordPageInner />
+    </Suspense>
   );
 }
