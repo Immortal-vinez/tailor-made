@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000",
-    "build": "prisma migrate deploy && next build",
-    "build:prod": "prisma migrate deploy && next build",
+    "build": "next build",
+    "build:prod": "next build",
     "start": "NODE_ENV=production node .next/standalone/server.js",
     "lint": "eslint .",
+    "db:deploy": "prisma migrate deploy",
     "db:push": "prisma db push",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",

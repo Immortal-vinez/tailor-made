@@ -282,6 +282,7 @@ export async function uploadImageToDrive(
   let response;
   try {
     response = await drive.files.create({
+      supportsAllDrives: true,
       requestBody: {
         name: fileName,
         parents: [folderId],
@@ -308,6 +309,7 @@ export async function uploadImageToDrive(
   // Make the file public
   await drive.permissions.create({
     fileId: fileId!,
+    supportsAllDrives: true,
     requestBody: {
       role: 'reader',
       type: 'anyone',
