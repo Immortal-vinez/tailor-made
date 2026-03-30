@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { uploadImageToDrive } from '@/lib/google';
 import { isAdminSession } from '@/lib/auth';
+import { put } from '@vercel/blob';
 import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
 
@@ -12,6 +13,10 @@ function isGoogleDriveConfigured(): boolean {
     !!process.env.GOOGLE_CLIENT_EMAIL &&
     !!process.env.GOOGLE_PRIVATE_KEY
   );
+}
+
+function isBlobConfigured(): boolean {
+  return !!process.env.BLOB_READ_WRITE_TOKEN;
 }
 
 function canUseLocalStorageFallback(): boolean {
@@ -28,7 +33,16 @@ async function saveLocally(file: File, fileName: string): Promise<string> {
   return `/uploads/${fileName}`;
 }
 
-// POST - Upload image (Google Drive or local fallback)
+async function uploadToBlob(file: File, fileName: string): Promise<string> {
+  const result = await put(fileName, file, {
+    access: 'public',
+    addRandomSuffix: true,
+  });
+
+  return result.url;
+}
+
+// POST - Upload image (Vercel Blob -> Google Drive -> local dev fallback)
 export async function POST(request: NextRequest) {
   try {
     if (!(await isAdminSession())) {
@@ -63,6 +77,19 @@ export async function POST(request: NextRequest) {
 
     let imageUrl: string;
 
+    if (isBlobConfigured()) {
+      try {
+        imageUrl = await uploadToBlob(file, fileName);
+
+        return NextResponse.json({
+          success: true,
+          imageUrl,
+        });
+      } catch (blobError) {
+        console.error('Vercel Blob upload failed:', blobError);
+      }
+    }
+
     if (isGoogleDriveConfigured()) {
       try {
         imageUrl = await uploadImageToDrive(file, fileName);
@@ -74,7 +101,7 @@ export async function POST(request: NextRequest) {
             {
               success: false,
               error:
-                'Google Drive upload failed in production. Verify GOOGLE_DRIVE_FOLDER_ID and share that folder with the service account email.',
+                'Upload failed in production. Configure BLOB_READ_WRITE_TOKEN for Vercel Blob, or verify Google Drive folder access for the service account.',
             },
             { status: 502 }
           );
@@ -89,7 +116,7 @@ export async function POST(request: NextRequest) {
           {
             success: false,
             error:
-              'Google Drive is not configured for production uploads. Set GOOGLE_CLIENT_EMAIL, GOOGLE_PRIVATE_KEY, and GOOGLE_DRIVE_FOLDER_ID.',
+              'No production upload provider configured. Set BLOB_READ_WRITE_TOKEN (recommended) or Google Drive credentials.',
           },
           { status: 500 }
         );
