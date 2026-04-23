@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Image from "next/image";
 import {
   Dialog,
   DialogContent,
@@ -34,7 +35,7 @@ import {
   Check,
   Eye,
 } from "lucide-react";
-import type { Product } from "@/lib/google";
+import type { Product } from "@/types/product";
 import { useToast } from "@/hooks/use-toast";
 import { formatUsd } from "@/lib/currency";
 
@@ -233,10 +234,12 @@ export function AdminPanel({ open, onOpenChange, products, onRefresh }: AdminPan
                     onClick={() => fileInputRef.current?.click()}
                   >
                     {formData.imageUrl ? (
-                      <img
+                      <Image
                         src={formData.imageUrl}
                         alt="Product"
-                        className="w-full h-full object-cover rounded-lg"
+                        fill
+                        sizes="128px"
+                        className="object-cover rounded-lg"
                       />
                     ) : (
                       <div className="text-center p-2">
@@ -439,9 +442,11 @@ export function AdminPanel({ open, onOpenChange, products, onRefresh }: AdminPan
                     <CardHeader className="flex flex-row items-center gap-4 pb-2">
                       <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
                         {product.imageUrl ? (
-                          <img
+                          <Image
                             src={product.imageUrl}
                             alt={product.name}
+                            width={64}
+                            height={64}
                             className="w-full h-full object-cover"
                           />
                         ) : (

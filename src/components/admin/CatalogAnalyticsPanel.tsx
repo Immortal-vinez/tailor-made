@@ -16,7 +16,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AlertTriangle, CheckCircle2, Star, TrendingUp } from "lucide-react";
-import type { Product } from "@/lib/google";
+import type { Product } from "@/types/product";
 import { formatUsd } from "@/lib/currency";
 
 interface CatalogAnalyticsPanelProps {

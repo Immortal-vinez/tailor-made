@@ -1,5 +1,6 @@
 import { google } from 'googleapis';
 import { Readable } from 'stream';
+import type { Product } from '@/types/product';
 
 // Google API configuration
 const SCOPES = [
@@ -43,20 +44,6 @@ export async function getDriveClient() {
 export async function getSheetsClient() {
   const auth = await getGoogleAuth();
   return google.sheets({ version: 'v4', auth });
-}
-
-// Product type definition
-export interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  category: 'men' | 'women' | 'children';
-  imageUrl: string;
-  sizes: string[];
-  colors: string[];
-  featured: boolean;
-  createdAt: string;
 }
 
 // Sheet headers

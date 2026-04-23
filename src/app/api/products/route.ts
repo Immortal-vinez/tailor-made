@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { dummyProducts } from '@/lib/dummy-data';
 import { isAdminSession } from '@/lib/auth';
-import type { Product } from '@/lib/google';
+import type { Product } from '@/types/product';
 
 function toProduct(row: {
   id: string; name: string; description: string; price: number;
@@ -21,25 +20,6 @@ function toProduct(row: {
 // GET - Fetch all products
 export async function GET(request: NextRequest) {
   try {
-    // Seed on first run — check TOTAL count so a category filter doesn't
-    // cause repeated seeding when only some categories have products.
-    const totalCount = await db.product.count();
-    if (totalCount === 0) {
-      await db.product.createMany({
-        data: dummyProducts.map((p) => ({
-          id: p.id,
-          name: p.name,
-          description: p.description,
-          price: p.price,
-          category: p.category,
-          imageUrl: p.imageUrl,
-          sizes: p.sizes.join(','),
-          colors: p.colors.join(','),
-          featured: p.featured,
-        })),
-      });
-    }
-
     const searchParams = request.nextUrl.searchParams;
     const category = searchParams.get('category');
     const featured = searchParams.get('featured');

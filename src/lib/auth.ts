@@ -2,6 +2,7 @@ import { getServerSession, type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
+import { createHash } from "crypto";
 import { db } from "@/lib/db";
 
 type AdminRole = "admin" | "user";
@@ -21,6 +22,21 @@ export function isAdminEmail(email?: string | null): boolean {
   }
 
   return adminEmailList.includes(email.toLowerCase());
+}
+
+function safeEmailFingerprint(email?: string | null): string {
+  if (!email) return "none";
+  return createHash("sha256")
+    .update(email.toLowerCase())
+    .digest("hex")
+    .slice(0, 12);
+}
+
+function logCustomerAuthFailure(reason: string, email?: string | null): void {
+  console.warn("[auth][customer][deny]", {
+    reason,
+    emailFingerprint: safeEmailFingerprint(email),
+  });
 }
 
 export const authOptions: NextAuthOptions = {
@@ -80,10 +96,16 @@ export const authOptions: NextAuthOptions = {
         const email = credentials?.email?.trim().toLowerCase();
         const password = credentials?.password;
 
-        if (!email || !password) return null;
+        if (!email || !password) {
+          logCustomerAuthFailure("missing_credentials", email);
+          return null;
+        }
 
         // Block if this email is an admin — admins must use the admin login
-        if (isAdminEmail(email)) return null;
+        if (isAdminEmail(email)) {
+          logCustomerAuthFailure("admin_email_on_customer_provider", email);
+          return null;
+        }
 
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore -- Prisma client was regenerated; restart TS server if this shows stale type errors
@@ -92,10 +114,21 @@ export const authOptions: NextAuthOptions = {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           select: { id: true, email: true, name: true, password: true } as any,
         }) as { id: string; email: string; name: string | null; password: string | null } | null;
-        if (!user || !user.password) return null;
+        if (!user) {
+          logCustomerAuthFailure("user_not_found", email);
+          return null;
+        }
+
+        if (!user.password) {
+          logCustomerAuthFailure("user_has_no_password", email);
+          return null;
+        }
 
         const valid = await bcrypt.compare(password, user.password);
-        if (!valid) return null;
+        if (!valid) {
+          logCustomerAuthFailure("invalid_password", email);
+          return null;
+        }
 
         return {
           id: user.id,

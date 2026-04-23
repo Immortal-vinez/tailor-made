@@ -1,9 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MessageCircle, Star } from "lucide-react";
-import type { Product } from "@/lib/google";
+import type { Product } from "@/types/product";
 import { formatUsd } from "@/lib/currency";
 
 interface HeroSectionProps {
@@ -94,10 +95,13 @@ export function HeroSection({ product, whatsappNumber }: HeroSectionProps) {
           {/* Product Image */}
           <div className="relative mx-auto w-full max-w-lg lg:max-w-none">
             <div className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-gradient-to-br from-neutral-200 to-neutral-300 shadow-2xl">
-              <img
+              <Image
                 src={product?.imageUrl || "/images/woman-hero.jpg"}
                 alt={product?.name || "Nyembo Designs Fashion"}
-                className="h-full w-full object-cover"
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover"
               />
               
               {/* Floating Badge */}

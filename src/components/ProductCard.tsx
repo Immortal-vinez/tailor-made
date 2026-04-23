@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, Heart, Eye } from "lucide-react";
-import type { Product } from "@/lib/google";
+import type { Product } from "@/types/product";
 import { formatUsd } from "@/lib/currency";
 
 interface ProductCardProps {
@@ -64,10 +65,12 @@ export function ProductCard({ product, whatsappNumber, variant = "men" }: Produc
       {/* Image Container */}
       <div className="relative aspect-[3/4] overflow-hidden">
         {product.imageUrl ? (
-          <img
+          <Image
             src={product.imageUrl}
             alt={product.name}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-110"
           />
         ) : (
           <div className={`flex h-full w-full items-center justify-center ${colors.accent}`}>

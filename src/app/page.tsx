@@ -6,7 +6,7 @@ import { HeroSection } from "@/components/HeroSection";
 import { CategorySection } from "@/components/CategorySection";
 import { Footer } from "@/components/Footer";
 import { Loader2 } from "lucide-react";
-import type { Product } from "@/lib/google";
+import type { Product } from "@/types/product";
 
 // WhatsApp number - change this to your actual number (without + or spaces)
 const WHATSAPP_NUMBER = "260968570833";

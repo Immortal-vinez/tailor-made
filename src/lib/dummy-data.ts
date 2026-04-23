@@ -1,4 +1,4 @@
-import type { Product } from "@/lib/google";
+import type { Product } from "@/types/product";
 
 // Dummy product data for testing
 export const dummyProducts: Product[] = [

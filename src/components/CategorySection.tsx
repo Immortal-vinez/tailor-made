@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ProductCard } from "./ProductCard";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
-import type { Product } from "@/lib/google";
+import type { Product } from "@/types/product";
 
 interface CategorySectionProps {
   id: string;

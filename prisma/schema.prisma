@@ -77,6 +77,11 @@ model Product {
   colors      String   @default("")
   featured    Boolean  @default(false)
   createdAt   DateTime @default(now())
+
+  @@index([category])
+  @@index([featured])
+  @@index([createdAt])
+  @@index([category, featured, createdAt])
 }
 
 // Order manually logged or captured from the storefront

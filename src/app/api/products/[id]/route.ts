@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { isAdminSession } from '@/lib/auth';
-import type { Product } from '@/lib/google';
+import type { Product } from '@/types/product';
 
 function toProduct(row: {
   id: string; name: string; description: string; price: number;

@@ -16,7 +16,7 @@ import {
   LogOut,
   LayoutDashboard,
 } from "lucide-react";
-import type { Product } from "@/lib/google";
+import type { Product } from "@/types/product";
 import { formatUsd } from "@/lib/currency";
 
 interface SummaryCounters {

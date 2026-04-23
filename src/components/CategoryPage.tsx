@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2, Search, SlidersHorizontal, X } from "lucide-react";
-import type { Product } from "@/lib/google";
+import type { Product } from "@/types/product";
 
 const WHATSAPP_NUMBER = "1234567890";
 

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -189,10 +190,12 @@ export default function AboutPage() {
               {/* Men Card */}
               <Card className="group overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300">
                 <div className="aspect-[4/3] relative overflow-hidden">
-                  <img
+                  <Image
                     src="/images/men-1.jpg"
                     alt="Men's collection"
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <Button variant="secondary" asChild>
@@ -209,10 +212,12 @@ export default function AboutPage() {
               {/* Women Card */}
               <Card className="group overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300">
                 <div className="aspect-[4/3] relative overflow-hidden">
-                  <img
+                  <Image
                     src="/images/woman-1.jpg"
                     alt="Women's collection"
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <Button variant="secondary" asChild>
@@ -229,10 +234,12 @@ export default function AboutPage() {
               {/* Children Card */}
               <Card className="group overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300">
                 <div className="aspect-[4/3] relative overflow-hidden">
-                  <img
+                  <Image
                     src="/images/kids-1.jpg"
                     alt="Children's collection"
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <Button variant="secondary" asChild>
