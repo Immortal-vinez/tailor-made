@@ -15,6 +15,10 @@ function isGoogleDriveConfigured(): boolean {
   );
 }
 
+function isGoogleDriveEnabled(): boolean {
+  return process.env.ENABLE_GOOGLE_DRIVE_UPLOAD === 'true';
+}
+
 function isBlobConfigured(): boolean {
   return !!process.env.BLOB_READ_WRITE_TOKEN;
 }
@@ -90,7 +94,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    if (isGoogleDriveConfigured()) {
+    if (isGoogleDriveEnabled() && isGoogleDriveConfigured()) {
       try {
         imageUrl = await uploadImageToDrive(file, fileName);
       } catch (driveError) {
