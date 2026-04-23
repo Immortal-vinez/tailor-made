@@ -1,7 +1,7 @@
 import { CategoryPage } from "@/components/CategoryPage";
 
 export const metadata = {
-  title: "Women's Collection | Oneway",
+  title: "Women's Collection | Nyembo Designs",
   description: "Explore our elegant women's collection featuring the latest trends in fashion. Quality pieces that express your unique style.",
 };
 

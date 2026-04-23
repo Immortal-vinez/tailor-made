@@ -19,7 +19,7 @@ import {
   Shield
 } from "lucide-react";
 
-const WHATSAPP_NUMBER = "1234567890";
+const WHATSAPP_NUMBER = "260968570833";
 
 export default function AboutPage() {
   const values = [
@@ -75,12 +75,12 @@ export default function AboutPage() {
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
                 About{" "}
                 <span className="bg-gradient-to-r from-neutral-900 via-neutral-700 to-neutral-500 bg-clip-text text-transparent">
-                  Oneway
+                  Nyembo Designs
                 </span>
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
                 We believe fashion is a form of self-expression. Since our founding, 
-                Oneway has been dedicated to bringing quality, style, and affordability 
+                Nyembo Designs has been dedicated to bringing quality, style, and affordability 
                 to families everywhere. Our curated collections for men, women, and children 
                 are designed to help you express your unique personality.
               </p>
@@ -137,7 +137,7 @@ export default function AboutPage() {
                 </h2>
                 <div className="space-y-4 text-muted-foreground">
                   <p>
-                    Oneway started with a simple idea: quality fashion should be accessible 
+                    Nyembo Designs started with a simple idea: quality fashion should be accessible 
                     to everyone. We noticed that families had to shop at multiple stores 
                     to find clothing for everyone, and we knew there was a better way.
                   </p>
@@ -148,7 +148,7 @@ export default function AboutPage() {
                   </p>
                   <p>
                     We're not just selling clothes – we're helping families express themselves 
-                    and feel confident in what they wear. That's the Oneway difference.
+                    and feel confident in what they wear. That's the Nyembo Designs difference.
                   </p>
                 </div>
                 <Button className="mt-6 bg-green-600 hover:bg-green-700" asChild>

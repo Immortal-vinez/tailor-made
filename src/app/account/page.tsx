@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
@@ -18,7 +19,6 @@ import {
   Loader2,
   User,
   Mail,
-  Shirt,
   LogOut,
   ShoppingBag,
   Package,
@@ -136,10 +136,8 @@ export default function AccountPage() {
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
         <div className="container mx-auto flex min-h-16 py-2 items-center justify-between gap-2 px-4">
           <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-neutral-900 to-neutral-700">
-              <Shirt className="h-4 w-4 text-white" />
-            </div>
-            <span className="text-lg font-bold tracking-tight">ONEWAY</span>
+            <Image src="/logo.png" alt="Nyembo Designs" width={36} height={36} className="rounded-full" />
+            <span className="text-lg font-bold tracking-tight">Nyembo Designs</span>
           </Link>
 
           <Button

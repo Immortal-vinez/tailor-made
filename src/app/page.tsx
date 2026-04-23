@@ -9,7 +9,7 @@ import { Loader2 } from "lucide-react";
 import type { Product } from "@/lib/google";
 
 // WhatsApp number - change this to your actual number (without + or spaces)
-const WHATSAPP_NUMBER = "1234567890"; // Replace with actual number
+const WHATSAPP_NUMBER = "260968570833";
 
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -47,7 +47,7 @@ export default function Home() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-12 w-12 animate-spin mx-auto text-neutral-900" />
-          <p className="mt-4 text-muted-foreground">Loading Oneway...</p>
+          <p className="mt-4 text-muted-foreground">Loading Nyembo Designs...</p>
         </div>
       </div>
     );

@@ -2,8 +2,9 @@
 
 import { Suspense, useMemo, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Loader2, Shirt, Eye, EyeOff } from "lucide-react";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -66,10 +67,8 @@ function ResetPasswordPageInner() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-neutral-50 via-white to-neutral-100 flex flex-col items-center justify-center px-4 py-12">
       <Link href="/" className="flex items-center gap-2 mb-8 group">
-        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-neutral-900 to-neutral-700 shadow-md">
-          <Shirt className="h-5 w-5 text-white" />
-        </div>
-        <span className="text-2xl font-bold tracking-tight text-neutral-900">ONEWAY</span>
+        <Image src="/logo.png" alt="Nyembo Designs" width={44} height={44} className="rounded-full" />
+        <span className="text-2xl font-bold tracking-tight text-neutral-900">Nyembo Designs</span>
       </Link>
 
       <Card className="w-full max-w-md shadow-xl border-neutral-200">

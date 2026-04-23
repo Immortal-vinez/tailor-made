@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
@@ -15,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shirt, Loader2, Eye, EyeOff } from "lucide-react";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 
 function LoginPageInner() {
   const router = useRouter();
@@ -141,11 +142,9 @@ function LoginPageInner() {
         href="/"
         className="flex items-center gap-2 mb-8 group"
       >
-        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-neutral-900 to-neutral-700 shadow-md">
-          <Shirt className="h-5 w-5 text-white" />
-        </div>
+        <Image src="/logo.png" alt="Nyembo Designs" width={44} height={44} className="rounded-full" />
         <span className="text-2xl font-bold tracking-tight text-neutral-900">
-          ONEWAY
+          Nyembo Designs
         </span>
       </Link>
 

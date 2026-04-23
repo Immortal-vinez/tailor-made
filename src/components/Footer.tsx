@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Shirt, MessageCircle, Instagram, Facebook, Twitter } from "lucide-react";
+import Image from "next/image";
+import { MessageCircle, Instagram, Facebook, Twitter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
@@ -29,14 +30,12 @@ export function Footer({ whatsappNumber }: FooterProps) {
           {/* Brand */}
           <div className="md:col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white">
-                <Shirt className="h-5 w-5 text-neutral-900" />
-              </div>
-              <span className="text-xl font-bold tracking-tight">ONEWAY</span>
+              <Image src="/logo.png" alt="Nyembo Designs" width={40} height={40} className="rounded-full" />
+              <span className="text-xl font-bold tracking-tight">Nyembo Designs</span>
             </Link>
             <p className="text-neutral-400 max-w-md">
               Your destination for quality fashion. Discover stylish clothing for men, women, 
-              and children. Express yourself with Oneway.
+              and children. Express yourself with Nyembo Designs.
             </p>
             <div className="flex gap-3 mt-4">
               <Button
@@ -122,7 +121,7 @@ export function Footer({ whatsappNumber }: FooterProps) {
         <Separator className="my-8 bg-neutral-800" />
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-neutral-400">
-          <p>&copy; {currentYear} Oneway. All rights reserved.</p>
+          <p>&copy; {currentYear} Nyembo Designs. All rights reserved.</p>
           <p>Quality fashion for everyone</p>
         </div>
       </div>

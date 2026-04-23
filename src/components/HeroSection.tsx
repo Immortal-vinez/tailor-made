@@ -96,7 +96,7 @@ export function HeroSection({ product, whatsappNumber }: HeroSectionProps) {
             <div className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-gradient-to-br from-neutral-200 to-neutral-300 shadow-2xl">
               <img
                 src={product?.imageUrl || "/images/woman-hero.jpg"}
-                alt={product?.name || "Oneway Fashion"}
+                alt={product?.name || "Nyembo Designs Fashion"}
                 className="h-full w-full object-cover"
               />
               

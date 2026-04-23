@@ -15,19 +15,19 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Oneway - Fashion for Everyone",
-  description: "Discover quality fashion for men, women, and children at Oneway. Express yourself with our stylish clothing collection.",
-  keywords: ["Oneway", "Fashion", "Men Clothing", "Women Clothing", "Children Clothing", "Style", "Trending"],
-  authors: [{ name: "Oneway" }],
+  title: "Nyembo Designs - Fashion for Everyone",
+  description: "Discover quality fashion for men, women, and children at Nyembo Designs. Express yourself with our stylish clothing collection.",
+  keywords: ["Nyembo Designs", "Fashion", "Men Clothing", "Women Clothing", "Children Clothing", "Style", "Trending"],
+  authors: [{ name: "Nyembo Designs" }],
   other: {
     "darkreader-lock": "",
   },
   icons: {
-    icon: "/logo.svg",
+    icon: "/logo.png",
   },
   openGraph: {
-    title: "Oneway - Fashion for Everyone",
-    description: "Discover quality fashion for men, women, and children at Oneway.",
+    title: "Nyembo Designs - Fashion for Everyone",
+    description: "Discover quality fashion for men, women, and children at Nyembo Designs.",
     type: "website",
   },
 };

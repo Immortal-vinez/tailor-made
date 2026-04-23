@@ -1,7 +1,7 @@
 import { CategoryPage } from "@/components/CategoryPage";
 
 export const metadata = {
-  title: "Children's Collection | Oneway",
+  title: "Children's Collection | Nyembo Designs",
   description: "Fun, comfortable, and durable clothing for your little ones. Bright colors and playful designs they'll love to wear.",
 };
 

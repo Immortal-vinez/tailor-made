@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,7 +12,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Menu, X, Shirt, LayoutDashboard, LogOut, User } from "lucide-react";
+import { Menu, X, LayoutDashboard, LogOut, User } from "lucide-react";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,10 +36,8 @@ export function Header() {
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-neutral-900 to-neutral-700">
-            <Shirt className="h-5 w-5 text-white" />
-          </div>
-          <span className="text-xl font-bold tracking-tight">ONEWAY</span>
+          <Image src="/logo.png" alt="Nyembo Designs" width={40} height={40} className="rounded-full" />
+          <span className="text-xl font-bold tracking-tight">Nyembo Designs</span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -122,7 +121,7 @@ export function Header() {
               </SheetHeader>
               <div className="flex flex-col gap-6 pt-8">
                 <div className="flex items-center justify-between">
-                  <span className="text-lg font-bold">ONEWAY</span>
+                  <span className="text-lg font-bold">Nyembo Designs</span>
                   <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)}>
                     <X className="h-5 w-5" />
                   </Button>

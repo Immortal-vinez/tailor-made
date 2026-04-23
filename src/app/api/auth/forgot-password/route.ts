@@ -23,9 +23,9 @@ async function sendResetEmail(to: string, resetUrl: string): Promise<void> {
     body: JSON.stringify({
       from,
       to: [to],
-      subject: "Reset your ONEWAY password",
+      subject: "Reset your Nyembo Designs password",
       html: `
-        <p>You requested a password reset for your ONEWAY account.</p>
+        <p>You requested a password reset for your Nyembo Designs account.</p>
         <p>
           Click this link to set a new password (expires in 1 hour):
           <br />
@@ -33,7 +33,7 @@ async function sendResetEmail(to: string, resetUrl: string): Promise<void> {
         </p>
         <p>If you did not request this, you can ignore this email.</p>
       `,
-      text: `You requested a password reset for your ONEWAY account.\n\nUse this link within 1 hour:\n${resetUrl}\n\nIf you did not request this, ignore this email.`,
+      text: `You requested a password reset for your Nyembo Designs account.\n\nUse this link within 1 hour:\n${resetUrl}\n\nIf you did not request this, ignore this email.`,
     }),
   });
 
