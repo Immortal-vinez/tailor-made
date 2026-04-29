@@ -26,7 +26,7 @@ async function saveLocally(file: File, fileName: string): Promise<string> {
 
 async function uploadToBlob(file: File, fileName: string): Promise<string> {
   const result = await put(fileName, file, {
-    access: 'public',
+    access: 'private',
     addRandomSuffix: true,
   });
 
