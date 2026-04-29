@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Loader2, Search, SlidersHorizontal, X } from "lucide-react";
 import type { Product } from "@/types/product";
 
-const WHATSAPP_NUMBER = "1234567890";
+const WHATSAPP_NUMBER = "260968570833";
 
 interface CategoryPageProps {
   category: "men" | "women" | "children";
