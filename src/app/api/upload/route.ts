@@ -1,23 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { uploadImageToDrive } from '@/lib/google';
 import { isAdminSession } from '@/lib/auth';
 import { put } from '@vercel/blob';
 import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
 
 export const dynamic = 'force-dynamic';
-
-function isGoogleDriveConfigured(): boolean {
-  return (
-    !!process.env.GOOGLE_DRIVE_FOLDER_ID &&
-    !!process.env.GOOGLE_CLIENT_EMAIL &&
-    !!process.env.GOOGLE_PRIVATE_KEY
-  );
-}
-
-function isGoogleDriveEnabled(): boolean {
-  return process.env.ENABLE_GOOGLE_DRIVE_UPLOAD === 'true';
-}
 
 function isBlobConfigured(): boolean {
   return !!process.env.BLOB_READ_WRITE_TOKEN;
@@ -46,7 +33,7 @@ async function uploadToBlob(file: File, fileName: string): Promise<string> {
   return result.url;
 }
 
-// POST - Upload image (Vercel Blob -> Google Drive -> local dev fallback)
+// POST - Upload image (Vercel Blob in production, local fallback in development)
 export async function POST(request: NextRequest) {
   try {
     if (!(await isAdminSession())) {
@@ -81,6 +68,7 @@ export async function POST(request: NextRequest) {
 
     let imageUrl: string;
 
+    // Try Vercel Blob first (production)
     if (isBlobConfigured()) {
       try {
         imageUrl = await uploadToBlob(file, fileName);
@@ -91,43 +79,36 @@ export async function POST(request: NextRequest) {
         });
       } catch (blobError) {
         console.error('Vercel Blob upload failed:', blobError);
-      }
-    }
-
-    if (isGoogleDriveEnabled() && isGoogleDriveConfigured()) {
-      try {
-        imageUrl = await uploadImageToDrive(file, fileName);
-      } catch (driveError) {
-        console.error('Google Drive upload failed:', driveError);
 
         if (!canUseLocalStorageFallback()) {
           return NextResponse.json(
             {
               success: false,
               error:
-                'Upload failed in production. Configure BLOB_READ_WRITE_TOKEN for Vercel Blob, or verify Google Drive folder access for the service account.',
+                'Upload failed in production. Configure BLOB_READ_WRITE_TOKEN for Vercel Blob storage.',
             },
             { status: 502 }
           );
         }
 
-        console.error('Falling back to local storage (development only).');
-        imageUrl = await saveLocally(file, fileName);
+        console.log('Falling back to local storage (development only).');
       }
     } else {
+      // No Vercel Blob configured
       if (!canUseLocalStorageFallback()) {
         return NextResponse.json(
           {
             success: false,
             error:
-              'No production upload provider configured. Set BLOB_READ_WRITE_TOKEN (recommended) or Google Drive credentials.',
+              'No production upload provider configured. Set BLOB_READ_WRITE_TOKEN for Vercel Blob.',
           },
           { status: 500 }
         );
       }
-
-      imageUrl = await saveLocally(file, fileName);
     }
+
+    // Use local storage fallback (development)
+    imageUrl = await saveLocally(file, fileName);
     
     return NextResponse.json({
       success: true,

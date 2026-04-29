@@ -95,6 +95,7 @@ function ResetPasswordPageInner() {
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
                   className="absolute inset-y-0 right-3 flex items-center text-muted-foreground hover:text-foreground"
+                  aria-label="Toggle password visibility"
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>

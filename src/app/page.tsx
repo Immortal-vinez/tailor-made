@@ -6,6 +6,7 @@ import { HeroSection } from "@/components/HeroSection";
 import { CategorySection } from "@/components/CategorySection";
 import { Footer } from "@/components/Footer";
 import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import type { Product } from "@/types/product";
 
 // WhatsApp number - change this to your actual number (without + or spaces)
@@ -14,6 +15,7 @@ const WHATSAPP_NUMBER = "260968570833";
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchProducts = async () => {
     try {
@@ -21,9 +23,12 @@ export default function Home() {
       const data = await response.json();
       if (data.success) {
         setProducts(data.products);
+      } else {
+        setError("Failed to load products. Please try again later.");
       }
     } catch (error) {
       console.error("Failed to fetch products:", error);
+      setError("Failed to load products. Please check your connection and try again.");
     } finally {
       setLoading(false);
     }
@@ -48,6 +53,19 @@ export default function Home() {
         <div className="text-center">
           <Loader2 className="h-12 w-12 animate-spin mx-auto text-neutral-900" />
           <p className="mt-4 text-muted-foreground">Loading Nyembo Designs...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">{error}</p>
+          <Button onClick={() => { setError(null); setLoading(true); fetchProducts(); }}>
+            Try Again
+          </Button>
         </div>
       </div>
     );

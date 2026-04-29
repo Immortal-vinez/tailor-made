@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -70,6 +70,27 @@ export default function AccountPage() {
   const isAdmin =
     session?.user?.isAdmin === true || session?.user?.role === "admin";
 
+  const loadOrders = useCallback(async () => {
+    setLoadingOrders(true);
+    setOrdersError(null);
+
+    try {
+      const res = await fetch("/api/account/orders");
+      const data = await res.json();
+      if (!data.success) {
+        setOrdersError(data.error || "Could not load your orders.");
+        setOrders([]);
+        return;
+      }
+      setOrders(Array.isArray(data.orders) ? data.orders : []);
+    } catch {
+      setOrdersError("Could not load your orders.");
+      setOrders([]);
+    } finally {
+      setLoadingOrders(false);
+    }
+  }, []);
+
   useEffect(() => {
     if (status === "unauthenticated") {
       router.replace("/login?callbackUrl=/account");
@@ -84,34 +105,8 @@ export default function AccountPage() {
   useEffect(() => {
     if (status !== "authenticated" || isAdmin) return;
 
-    let active = true;
-    setLoadingOrders(true);
-    setOrdersError(null);
-
-    fetch("/api/account/orders")
-      .then((res) => res.json())
-      .then((data) => {
-        if (!active) return;
-        if (!data.success) {
-          setOrdersError(data.error || "Could not load your orders.");
-          setOrders([]);
-          return;
-        }
-        setOrders(Array.isArray(data.orders) ? data.orders : []);
-      })
-      .catch(() => {
-        if (!active) return;
-        setOrdersError("Could not load your orders.");
-        setOrders([]);
-      })
-      .finally(() => {
-        if (active) setLoadingOrders(false);
-      });
-
-    return () => {
-      active = false;
-    };
-  }, [status, isAdmin]);
+    loadOrders();
+  }, [status, isAdmin, loadOrders]);
 
   const orderStats = useMemo(() => {
     const total = orders.length;
@@ -144,6 +139,7 @@ export default function AccountPage() {
             variant="ghost"
             size="sm"
             onClick={() => signOut({ callbackUrl: "/" })}
+            aria-label="Sign out"
           >
             <LogOut className="mr-2 h-4 w-4" />
             Log out

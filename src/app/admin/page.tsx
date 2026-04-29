@@ -36,6 +36,7 @@ export default function AdminDashboardPage() {
     ordersRevenue: 0,
   });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [adminOpen, setAdminOpen] = useState(false);
 
   const isAdmin =
@@ -43,6 +44,7 @@ export default function AdminDashboardPage() {
 
   const loadDashboard = useCallback(async () => {
     setLoading(true);
+    setError(null);
     try {
       const [productsRes, requestsRes, ordersRes] = await Promise.all([
         fetch("/api/products"),
@@ -70,6 +72,7 @@ export default function AdminDashboardPage() {
       });
     } catch (err) {
       console.error("Failed to load dashboard:", err);
+      setError("Failed to load dashboard data. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -87,6 +90,17 @@ export default function AdminDashboardPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-neutral-50">
         <Loader2 className="h-10 w-10 animate-spin text-neutral-700" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-neutral-50">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">{error}</p>
+          <Button onClick={loadDashboard}>Try Again</Button>
+        </div>
       </div>
     );
   }

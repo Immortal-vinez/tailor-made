@@ -40,11 +40,33 @@ function LoginPageInner() {
   const [signInPassword, setSignInPassword] = useState("");
   const [signInError, setSignInError] = useState<string | null>(null);
   const [signInLoading, setSignInLoading] = useState(false);
+  const [signInEmailError, setSignInEmailError] = useState<string | null>(null);
   const [showSignInPw, setShowSignInPw] = useState(false);
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleSignInEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSignInEmail(value);
+    if (value && !validateEmail(value)) {
+      setSignInEmailError("Please enter a valid email address.");
+    } else {
+      setSignInEmailError(null);
+    }
+  };
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setSignInError(null);
+
+    if (signInEmailError) {
+      setSignInError("Please correct the email address.");
+      return;
+    }
+
     setSignInLoading(true);
 
     const result = await signIn("customer", {
@@ -72,11 +94,27 @@ function LoginPageInner() {
   const [regConfirm, setRegConfirm] = useState("");
   const [regError, setRegError] = useState<string | null>(null);
   const [regLoading, setRegLoading] = useState(false);
+  const [regEmailError, setRegEmailError] = useState<string | null>(null);
   const [showRegPw, setShowRegPw] = useState(false);
+
+  const handleRegEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setRegEmail(value);
+    if (value && !validateEmail(value)) {
+      setRegEmailError("Please enter a valid email address.");
+    } else {
+      setRegEmailError(null);
+    }
+  };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setRegError(null);
+
+    if (regEmailError) {
+      setRegError("Please correct the email address.");
+      return;
+    }
 
     if (regPassword !== regConfirm) {
       setRegError("Passwords do not match.");
@@ -179,9 +217,13 @@ function LoginPageInner() {
                     autoComplete="email"
                     required
                     value={signInEmail}
-                    onChange={(e) => setSignInEmail(e.target.value)}
+                    onChange={handleSignInEmailChange}
                   />
                 </div>
+
+                {signInEmailError && (
+                  <p className="text-sm text-red-600">{signInEmailError}</p>
+                )}
 
                 <div className="space-y-1.5">
                   <Label htmlFor="si-password">Password</Label>
@@ -200,7 +242,7 @@ function LoginPageInner() {
                       type="button"
                       onClick={() => setShowSignInPw((v) => !v)}
                       className="absolute inset-y-0 right-3 flex items-center text-muted-foreground hover:text-foreground"
-                      tabIndex={-1}
+                      aria-label="Toggle password visibility"
                     >
                       {showSignInPw ? (
                         <EyeOff className="h-4 w-4" />
@@ -257,9 +299,13 @@ function LoginPageInner() {
                     autoComplete="email"
                     required
                     value={regEmail}
-                    onChange={(e) => setRegEmail(e.target.value)}
+                    onChange={handleRegEmailChange}
                   />
                 </div>
+
+                {regEmailError && (
+                  <p className="text-sm text-red-600">{regEmailError}</p>
+                )}
 
                 <div className="space-y-1.5">
                   <Label htmlFor="reg-phone">
@@ -293,7 +339,7 @@ function LoginPageInner() {
                       type="button"
                       onClick={() => setShowRegPw((v) => !v)}
                       className="absolute inset-y-0 right-3 flex items-center text-muted-foreground hover:text-foreground"
-                      tabIndex={-1}
+                      aria-label="Toggle password visibility"
                     >
                       {showRegPw ? (
                         <EyeOff className="h-4 w-4" />
