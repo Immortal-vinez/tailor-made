@@ -65,14 +65,13 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         const email = credentials?.email?.trim().toLowerCase();
         const password = credentials?.password;
-        const expectedEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
         const expectedPassword = process.env.ADMIN_PASSWORD;
 
-        if (!email || !password || !expectedEmail || !expectedPassword) {
+        if (!email || !password || adminEmailList.length === 0 || !expectedPassword) {
           return null;
         }
 
-        if (email !== expectedEmail || password !== expectedPassword) {
+        if (!adminEmailList.includes(email) || password !== expectedPassword) {
           return null;
         }
 
@@ -107,11 +106,8 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore -- Prisma client was regenerated; restart TS server if this shows stale type errors
         const user = await db.user.findUnique({
           where: { email },
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           select: { id: true, email: true, name: true, password: true } as any,
         }) as { id: string; email: string; name: string | null; password: string | null } | null;
         if (!user) {

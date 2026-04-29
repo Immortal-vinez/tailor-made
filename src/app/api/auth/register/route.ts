@@ -49,7 +49,6 @@ export async function POST(request: Request) {
     const hashedPassword = await bcrypt.hash(password, 12);
 
     // --- create user ---
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const user = await db.user.create({
       data: {
         name: name.trim(),
@@ -57,7 +56,6 @@ export async function POST(request: Request) {
         password: hashedPassword,
         phone: phone?.trim() || null,
         role: "customer",
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any,
       select: { id: true, name: true, email: true },
     });
