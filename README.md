@@ -72,6 +72,19 @@ bun start
 
 Open [http://localhost:3000](http://localhost:3000) to see your application running.
 
+## 🔧 Environment Variables
+
+This app requires a few environment variables for authentication and uploads:
+
+- `DATABASE_URL` — Prisma database connection string
+- `NEXTAUTH_SECRET` — secret for NextAuth session signing
+- `NEXTAUTH_URL` — app URL used by NextAuth in production
+- `ADMIN_PASSWORD` — password for admin credentials login
+- `ADMIN_EMAILS` — comma-separated admin email list
+- `BLOB_READ_WRITE_TOKEN` — Vercel Blob write token for production image uploads
+
+> In development, the upload API falls back to writing files into `public/uploads` when `BLOB_READ_WRITE_TOKEN` is not set.
+
 ## 🤖 Powered by Z.ai
 
 This scaffold is optimized for use with [Z.ai](https://chat.z.ai) - your AI assistant for:

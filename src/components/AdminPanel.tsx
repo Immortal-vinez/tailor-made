@@ -97,11 +97,25 @@ export function AdminPanel({ open, onOpenChange, products, onRefresh }: AdminPan
         body: formDataToSend,
       });
 
-      if (!response.ok && response.status === 401) {
-        toast({ title: "Not authorised", description: "Please log in as admin and try again.", variant: "destructive" });
+      const data = await response.json();
+      if (!response.ok) {
+        if (response.status === 401) {
+          toast({ title: "Not authorised", description: "Please log in as admin and try again.", variant: "destructive" });
+          return;
+        }
+
+        toast({
+          title: "Upload failed",
+          description:
+            data.error ??
+            (response.status === 503
+              ? "Production uploads are not configured. Set BLOB_READ_WRITE_TOKEN."
+              : "Unknown error"),
+          variant: "destructive",
+        });
         return;
       }
-      const data = await response.json();
+
       if (data.success) {
         setFormData((prev) => ({ ...prev, imageUrl: data.imageUrl }));
         toast({ title: "Image uploaded" });

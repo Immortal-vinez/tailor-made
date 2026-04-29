@@ -44,11 +44,11 @@ export async function POST(request: NextRequest) {
     }
 
     const formData = await request.formData();
-    const file = formData.get('file') as File;
-    
-    if (!file) {
+    const file = formData.get('file');
+
+    if (!file || !(file instanceof File)) {
       return NextResponse.json(
-        { success: false, error: 'No file provided' },
+        { success: false, error: 'No image file provided' },
         { status: 400 }
       );
     }
@@ -67,8 +67,21 @@ export async function POST(request: NextRequest) {
     const fileName = `${timestamp}_${originalName}`;
 
     let imageUrl: string;
+    const isProduction = process.env.NODE_ENV === 'production';
 
-    // Try Vercel Blob first (production)
+    // If production and blob is not configured, fail fast with a clear message.
+    if (isProduction && !isBlobConfigured()) {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            'Production upload is not configured. Set BLOB_READ_WRITE_TOKEN in Vercel env vars.',
+        },
+        { status: 503 }
+      );
+    }
+
+    // Try Vercel Blob first when configured.
     if (isBlobConfigured()) {
       try {
         imageUrl = await uploadToBlob(file, fileName);
@@ -92,18 +105,6 @@ export async function POST(request: NextRequest) {
         }
 
         console.log('Falling back to local storage (development only).');
-      }
-    } else {
-      // No Vercel Blob configured
-      if (!canUseLocalStorageFallback()) {
-        return NextResponse.json(
-          {
-            success: false,
-            error:
-              'No production upload provider configured. Set BLOB_READ_WRITE_TOKEN for Vercel Blob.',
-          },
-          { status: 500 }
-        );
       }
     }
 
